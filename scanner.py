@@ -7,7 +7,13 @@ def check_port(target_ip, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(0.5)
         if s.connect_ex((target_ip, port)) == 0:
-            print(f"[+] Port {port} is open")
+            # Προσπαθούμε να βρούμε το όνομα της υπηρεσίας (π.χ. http, microsoft-ds κλπ)
+            try:
+                service = socket.getservbyport(port, 'tcp')
+            except Exception:
+                service = "unknown"
+                
+            print(f"[+] Port {port} is open ({service})")
         s.close()
     except Exception:
         pass
